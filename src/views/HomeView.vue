@@ -33,7 +33,23 @@
           </tr>
         </thead>
         <tbody>
-          <FlightTableRow v-for="flight in flights.content" :flight="flight" />
+          <tr v-for="flight in flights.content">
+            <th scope="row">{{ flight.id }}</th>
+            <td>{{ flight.flightNumber }}</td>
+            <td>{{ flight.destination }}</td>
+            <td>{{ flight.plane }}</td>
+            <td>{{ new Date(flight.scheduledAt).toLocaleString('sr-RS') }}</td>
+            <td>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary btn-sm" @click="(e) => showDetails(flight.id)"><i
+                    class="fa-solid fa-circle-info"></i></button>
+                <button type="button" class="btn btn-outline-success btn-sm" v-if="user && !isSaved(flight)"
+                  @click="(e) => saveFlight(flight)">
+                  <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -42,12 +58,25 @@
 </template>
 
 <script setup lang="ts">
-import FlightTableRow from '@/components/FlightTableRow.vue';
 import LoadingWidget from '@/components/LoadingWidget.vue';
+import { FlightModel } from '@/models/flight.model';
+import { BackendService } from '@/services/backend.service';
 import { FlightService } from '@/services/flight.service'
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const flights = ref<any>();
+const user = ref<any>()
+const savedFlights = ref<any>()
+
+BackendService.getSelf()
+  .then(rsp => {
+    user.value = rsp.data
+    BackendService.getSavedFlights()
+      .then(rsp => savedFlights.value = rsp.data)
+      .catch(e => console.log(e))
+  })
+  .catch(e => console.log(e))
 
 function loadData(page = 0) {
   FlightService.getAllFlights(page, 12)
@@ -78,4 +107,34 @@ function loadLast() {
   loadData(flights.value.totalPages - 1)
 }
 
+const router = useRouter();
+function showDetails(id: number) {
+  router.push('/flight/' + id)
+}
+
+function isSaved(flight: FlightModel) {
+
+  return (savedFlights.value && savedFlights.value.includes(flight))
+}
+
+function saveFlight(flight: FlightModel) {
+  console.log(flight)
+  BackendService.saveFlight(flight.id)
+    .then(rsp => {
+      if (rsp.status === 200) {
+        alert("Successfuly saved flight")
+        router.push('/saved')
+        return
+      }
+
+      alert("Something went wrong...")
+      localStorage.clear()
+      router.push('/login')
+    })
+    .catch(e => {
+      alert(e.message)
+      localStorage.clear()
+      router.push('/login')
+    })
+} 
 </script>

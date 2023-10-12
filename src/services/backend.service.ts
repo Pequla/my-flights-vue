@@ -92,7 +92,7 @@ export class BackendService {
             } catch (e) {
                 console.log(e)
                 localStorage.clear()
-                // window.location.href='/login'
+                // window.location.href='/'
                 throw new Error('Failed to refresh the token')
             }
         }

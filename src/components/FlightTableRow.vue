@@ -9,7 +9,7 @@
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-primary btn-sm" @click="(e) => showDetails(flight.id)"><i
                         class="fa-solid fa-circle-info"></i></button>
-                <button type="button" class="btn btn-outline-success btn-sm">
+                <button type="button" class="btn btn-outline-success btn-sm" v-if="user">
                     <i class="fa-solid fa-floppy-disk"></i>
                 </button>
             </div>
@@ -23,9 +23,10 @@ import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
-    flight: Object
+    flight: Object,
+    user: Object
 });
-const { flight } = toRefs<any>(props);
+const { flight, user } = toRefs<any>(props);
 
 const router = useRouter();
 function showDetails(id: number) {

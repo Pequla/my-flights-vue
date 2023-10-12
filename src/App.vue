@@ -20,14 +20,14 @@
             <router-link class="nav-link" to="/saved">Saved Flights</router-link>
           </li>
           <li class="nav-item" v-if="user">
-            <router-link class="nav-link" to="/logout">Logout</router-link>
+            <button class="nav-link" @click="doLogout">Logout</button>
           </li>
           <li class="nav-item" v-else>
             <router-link class="nav-link" to="/login">Login</router-link>
           </li>
         </ul>
         <span class="navbar-text" v-if="user">
-          Curent User: <b>{{ user.name }}</b>
+          Curent User: <b>{{ user.email }}</b>
         </span>
       </div>
     </div>
@@ -52,4 +52,9 @@ BackendService.getSelf()
 
 const year = new Date().getFullYear();
 const footer = process.env.VUE_APP_CUSTOM_FOOTER
+
+function doLogout() {
+  localStorage.clear()
+  window.location.href = '/'
+}
 </script>

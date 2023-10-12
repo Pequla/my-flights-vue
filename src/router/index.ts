@@ -2,6 +2,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import FlightView from '@/views/FlightView.vue'
+import LoginView from '@/views/LoginView.vue'
+import RegisterView from '@/views/RegisterView.vue'
+import SavedView from '@/views/SavedView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -27,6 +30,30 @@ const routes: Array<RouteRecordRaw> = [
       title: 'Flight'
     },
     component: FlightView
+  },
+  {
+    path: '/login',
+    name: 'login',
+    meta: {
+      title: 'Login'
+    },
+    component: LoginView
+  },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {
+      title: 'Register'
+    },
+    component: RegisterView
+  },
+  {
+    path: '/saved',
+    name: 'saved',
+    meta: {
+      title: 'Saved'
+    },
+    component: SavedView
   },
 ]
 

@@ -1,19 +1,7 @@
-# my-flights-vue
+# My Flights - Frontend
 
-## Project setup
+Example `.env`
 ```
-npm install
+VUE_APP_CUSTOM_FOOTER="Singidunum University - Cloud Computing"
+VUE_APP_BACKEND_BASE_URL=http://localhost:4200/api
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
