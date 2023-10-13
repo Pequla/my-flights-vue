@@ -43,9 +43,13 @@
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-primary btn-sm" @click="(e) => showDetails(flight.id)"><i
                     class="fa-solid fa-circle-info"></i></button>
-                <button type="button" class="btn btn-outline-success btn-sm" v-if="user && !isSaved(flight)"
+                  <button type="button" class="btn btn-outline-success btn-sm" v-if="user && !isSaved(flight)"
                   @click="(e) => saveFlight(flight)">
                   <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm" v-if="user && isSaved(flight)"
+                  @click="(e) => saveFlight(flight)">
+                  <i class="fa-solid fa-trash-can"></i>
                 </button>
               </div>
             </td>
@@ -67,7 +71,7 @@ import { useRouter } from 'vue-router';
 
 const flights = ref<any>();
 const user = ref<any>()
-const savedFlights = ref<any>()
+const savedFlights = ref<FlightModel[]>()
 
 BackendService.getSelf()
   .then(rsp => {
@@ -113,8 +117,15 @@ function showDetails(id: number) {
 }
 
 function isSaved(flight: FlightModel) {
-
-  return (savedFlights.value && savedFlights.value.includes(flight))
+  if (savedFlights.value) {
+    for (const flt in savedFlights.value) {
+      const fltAny = flt as any
+      if (fltAny.id === flight.id) return true
+    }
+    const flitered = savedFlights.value.filter((fl: FlightModel) => fl.id === flight.id)
+    return flitered.length > 0
+  }
+  return false
 }
 
 function saveFlight(flight: FlightModel) {

@@ -23,8 +23,11 @@
                         <td>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-outline-primary btn-sm"
-                                    @click="(e) => showDetails(flight.id)"><i class="fa-solid fa-circle-info"></i></button>
-                                <button type="button" class="btn btn-outline-danger btn-sm">
+                                    @click="(e) => showDetails(flight.id)">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                    @click="(e) => deleteFlight(flight.id)">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </div>
@@ -38,6 +41,8 @@
 </template>
 
 <script lang="ts" setup>
+import LoadingWidget from '@/components/LoadingWidget.vue';
+import { FlightModel } from '@/models/flight.model';
 import { BackendService } from '@/services/backend.service';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -64,5 +69,18 @@ BackendService.getSavedFlights()
 const router = useRouter();
 function showDetails(id: number) {
     router.push('/flight/' + id)
+}
+
+function deleteFlight(id: number) {
+    BackendService.deleteSavedFlight(id)
+        .then(rsp => {
+            if (rsp.status === 200) {
+                flights.value = flights.value.filter((fl: FlightModel) => fl.id !== id)
+                return
+            }
+            console.log(rsp.data)
+            alert('Someting went wrong')
+        })
+        .catch(e => console.log(e))
 }
 </script>
